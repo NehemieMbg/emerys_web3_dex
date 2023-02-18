@@ -7,21 +7,32 @@ import {
   loadProvider,
   loadNetwork,
   loadAccount,
-  loadToken,
+  loadTokens,
+  loadExchange,
 } from "./store/interactions";
 
 function App() {
   const dispatch = useDispatch();
 
   const loadBlockchainData = async () => {
-    await loadAccount(dispatch);
-
     // Connect Ether to the blockchain
     const provider = loadProvider(dispatch);
+
+    // Fetch current network's chainId (e.g. hardhat 1337, kovan:42)
     const chainId = await loadNetwork(provider, dispatch);
 
-    // Emerys Smart Contract
-    await loadToken(provider, config[chainId].EMRS.address, dispatch);
+    // Fetch current account & balance from Metamask
+    await loadAccount(provider, dispatch);
+
+    // Load tokens Smart Contract
+    const EMRS = config[chainId].EMRS;
+    const WRG = config[chainId].WRG;
+
+    await loadTokens(provider, [EMRS.address, WRG.address], dispatch);
+
+    // Load exchange smart contract
+    const exchangeConfig = config[chainId].exchange;
+    await loadExchange(provider, exchangeConfig.address, dispatch);
   };
 
   useEffect(() => {
