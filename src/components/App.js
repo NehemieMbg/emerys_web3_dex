@@ -1,7 +1,9 @@
 import { React, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import config from "../config.json";
+
 import Navbar from "./Navbar";
-import config from "./config.json";
+import Content from "./Content";
 
 import {
   loadProvider,
@@ -9,7 +11,7 @@ import {
   loadAccount,
   loadTokens,
   loadExchange,
-} from "./store/interactions";
+} from "../store/interactions";
 
 function App() {
   const dispatch = useDispatch();
@@ -21,8 +23,22 @@ function App() {
     // Fetch current network's chainId (e.g. hardhat 1337, kovan:42)
     const chainId = await loadNetwork(provider, dispatch);
 
+    // Reload page when switching network
+    window.ethereum.on("chainChanged", () => {
+      window.location.reload();
+    });
+
     // Fetch current account & balance from Metamask
-    await loadAccount(provider, dispatch);
+    // To switch user info automatically
+    window.ethereum.on("chainChanged", () => {
+      window.location.reload();
+    });
+
+    // Fetch current account & balance from Metamask when changed
+    window.ethereum.on("accountsChanged", () => {
+      loadAccount(provider, dispatch);
+    });
+    // await loadAccount(provider, dispatch);
 
     // Load tokens Smart Contract
     const EMRS = config[chainId].EMRS;
@@ -42,6 +58,7 @@ function App() {
   return (
     <div>
       <Navbar />
+      <Content />
     </div>
   );
 }
