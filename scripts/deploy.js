@@ -25,6 +25,18 @@ async function main() {
   const warg = await Warg.deploy();
   await warg.deployed();
   console.log(`Warg deployed to: ${warg.address}`);
+
+  // Moon token deployment
+  const Moon = await ethers.getContractFactory("Moon");
+  const moon = await Moon.deploy();
+  await moon.deployed();
+  console.log(`Moon deployed to: ${moon.address}`);
+
+  // Moon token deployment
+  const Yoshi = await ethers.getContractFactory("Yoshi");
+  const yoshi = await Yoshi.deploy();
+  await yoshi.deployed();
+  console.log(`Yoshi deployed to: ${yoshi.address}`);
 }
 
 // async function writeDeploymentInfo(contract, filename = "") {

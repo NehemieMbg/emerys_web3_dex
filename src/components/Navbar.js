@@ -17,21 +17,21 @@ function Navbar() {
   return (
     <div className="bg-gray-900 h-full flex justify-between items-center px-16 py-6 pb-16">
       <div className="text-white font-semibold flex items-center gap-1">
-        <img src={MoonLogo} className="h-12" />
+        <img src={MoonLogo} className="h-12" alt="logo" />
         <h1 className="text-2xl">emrs</h1>
       </div>
 
       <div>
         <div class="text-white font-medium text-sm cursor-pointer bg-slate-700 hover:bg-teal-700  rounded-md border-slate-400/20 border-[1px]">
           {account ? (
-            <a href="" className="flex gap-4 items-center px-10 py-2.5">
+            <a href="none" className="flex gap-4 items-center px-10 py-2.5">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="currentColor"
-                class="w-6 h-6"
+                className="w-6 h-6"
               >
                 <path
                   strokeLinecap="round"

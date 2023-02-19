@@ -43,7 +43,6 @@ function App() {
     // Load tokens Smart Contract
     const EMRS = config[chainId].EMRS;
     const WRG = config[chainId].WRG;
-
     await loadTokens(provider, [EMRS.address, WRG.address], dispatch);
 
     // Load exchange smart contract
