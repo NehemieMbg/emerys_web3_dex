@@ -1,5 +1,5 @@
 import { React, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import config from "../config.json";
 
 import Navbar from "./Navbar";
@@ -11,6 +11,7 @@ import {
   loadAccount,
   loadTokens,
   loadExchange,
+  subscribeToEvents,
 } from "../store/interactions";
 
 function App() {
@@ -47,7 +48,14 @@ function App() {
 
     // Load exchange smart contract
     const exchangeConfig = config[chainId].exchange;
-    await loadExchange(provider, exchangeConfig.address, dispatch);
+    const exchange = await loadExchange(
+      provider,
+      exchangeConfig.address,
+      dispatch
+    );
+
+    // Listen to events
+    subscribeToEvents(exchange, dispatch);
   };
 
   useEffect(() => {

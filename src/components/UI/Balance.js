@@ -6,7 +6,7 @@ const Balance = () => {
 
   return (
     <div>
-      <div className="bg-slate-900 w-fit px-6 py-2.5 rounded-xl mb-5">
+      <div className="bg-slate-900 w-fit px-6 py-2.5 rounded-xl">
         {balance ? (
           <div>
             <span className="text-slate-200">Balance: </span>

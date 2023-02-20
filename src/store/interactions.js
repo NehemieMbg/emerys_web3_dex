@@ -52,3 +52,69 @@ export const loadExchange = async (provider, address, dispatch) => {
 
   return exchange;
 };
+
+///////////////////////////////////////
+// To add when Deposit event is implemented
+///////////////////////////////////////
+export const subscribeToEvents = (exchange, dispatch) => {
+  exchange.on("Deposit", () => {
+    dispatch({ type: "TRANSFER_SUCCESS" });
+  });
+};
+
+// ```solidity code function
+// mapping(address => mapping(address => uint256)) public balances;
+
+// Give token symbol, Not token address
+export const loadBalances = async (exchange, tokens, account, dispatch) => {
+  let balance = ethers.utils.formatUnits(
+    await tokens[0].balanceOf(account),
+    18
+  );
+  dispatch({ type: "TOKEN_1_BALANCE_LOADED", balance });
+
+  balance = ethers.utils.formatUnits(
+    await exchange.balances(account, tokens[0].address),
+    18
+  );
+  dispatch({ type: "EXCHANGE_TOKEN_1_BALANCE_LOADED", balance });
+
+  balance = ethers.utils.formatUnits(await tokens[1].balanceOf(account), 18);
+  dispatch({ type: "TOKEN_2_BALANCE_LOADED", balance });
+
+  balance = ethers.utils.formatUnits(
+    await exchange.balances(account, tokens[1].address),
+    18
+  );
+  dispatch({ type: "EXCHANGE_TOKEN_2_BALANCE_LOADED", balance });
+};
+
+export const transferTokens = async (
+  provider,
+  exchange,
+  transferType,
+  token,
+  amount,
+  dispatch
+) => {
+  let transaction;
+
+  dispatch({ type: "TRANSFER_REQUEST" });
+
+  try {
+    const signer = await provider.getSigner();
+    const amountToTransfer = ethers.utils.parseUnits(amount.toString(), 18);
+
+    transaction = await token
+      .connect(signer)
+      .approve(exchange.address, amountToTransfer);
+    await transaction.wait();
+    transaction = await exchange
+      .connect(signer)
+      .deposit(amountToTransfer, token.address);
+
+    await transaction.wait();
+  } catch (error) {
+    console.error(error);
+  }
+};

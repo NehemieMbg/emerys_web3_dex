@@ -30,8 +30,8 @@ const Networks = () => {
             <option value="0" disabled>
               Select Network
             </option>
-            <option value="0x1337">Localhost</option>
-            <option value="0x5">Goerli</option>
+            <option value="0x1">Localhost</option>
+            {/* <option value="0x5">Goerli</option> */}
           </select>
         )}
       </div>
