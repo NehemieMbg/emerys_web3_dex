@@ -15,13 +15,13 @@ const Markets = () => {
   return (
     <div>
       <div>
-        <h2 className="text-md mb-1 text-slate-300">Select Market</h2>
+        <h2 className="text-sm mb-1 text-slate-300">Select Market</h2>
       </div>
 
       {chainId && config[chainId] ? (
         <div>
           <select
-            className="bg-transparent w-full outline-none text-sm"
+            className="bg-transparent w-full outline-none text-xs "
             name="markets"
             onChange={marketHandler}
           >

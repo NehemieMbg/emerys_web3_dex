@@ -1,5 +1,4 @@
 import React from "react";
-import Networks from "./Networks";
 import Balance from "./Balance";
 import Markets from "./Markets";
 import BlockComponent from "./BlockComponent";
@@ -9,11 +8,7 @@ const RightSide = () => {
   return (
     <div>
       <BlockComponent>
-        <Networks />
         <Balance />
-      </BlockComponent>
-
-      <BlockComponent>
         <Markets />
       </BlockComponent>
 

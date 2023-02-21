@@ -2,6 +2,7 @@ import React from "react";
 import MoonLogo from "../images/moon-logo.svg";
 import EmrsLogo from "../images/emerys-teal.svg";
 import Connect from "./UI/Connect";
+import Network from "./UI/Networks";
 
 function Navbar() {
   return (
@@ -38,7 +39,10 @@ function Navbar() {
           </div>
         </div>
       </div>
-      <Connect />
+      <div className="flex items-center gap-12">
+        <Network />
+        <Connect />
+      </div>
     </div>
   );
 }

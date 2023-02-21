@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { loadBalances, transferTokens } from "../../store/interactions";
 
 const Wallet = () => {
-  const [token1TransferAmount, setToken1transferAmount] = useState(0);
+  const [token1TransferAmount, setToken1TransferAmount] = useState("");
+  const [token2TransferAmount, setToken2TransferAmount] = useState(0);
+  const [isDeposit, setIsDeposit] = useState(true);
+  // const [isWithdraw, setIsWithdraw] = useState(false);
 
   const dispatch = useDispatch();
   const exchange = useSelector((state) => state.exchange.contract);
@@ -17,11 +20,18 @@ const Wallet = () => {
     (state) => state.exchange.transferInProgress
   );
 
+  const switchToDeposit = () => {
+    if (isDeposit === false) {
+      setIsDeposit(true);
+    } else setIsDeposit(false);
+  };
+
   const amountHandler = (e, token) => {
     if (token.address === tokens[0].address) {
-      setToken1transferAmount(e.target.value);
+      setToken1TransferAmount(e.target.value);
+    } else {
+      setToken2TransferAmount(e.target.value);
     }
-    console.log({ token1TransferAmount });
   };
 
   const depositHandler = (e, token) => {
@@ -35,7 +45,18 @@ const Wallet = () => {
         token1TransferAmount,
         dispatch
       );
-      setToken1transferAmount(0);
+      setToken1TransferAmount("");
+    }
+    if (token.address === tokens[1].address) {
+      transferTokens(
+        provider,
+        exchange,
+        "Deposit",
+        token,
+        token2TransferAmount,
+        dispatch
+      );
+      setToken2TransferAmount(0);
     }
   };
 
@@ -47,7 +68,7 @@ const Wallet = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-center mb-4">
         <h2 className="text-md text-slate-300">Wallet</h2>
 
         <div>
@@ -56,10 +77,16 @@ const Wallet = () => {
             className="inline-flex items-center p-1 rounded-2xl cursor-pointer  text-sm bg-slate-900"
           >
             <input id="Toggle3" type="checkbox" className="hidden peer" />
-            <span className="px-2 py-0.5 rounded-xl dark:bg-teal-700/80 dark:text-slate-200 peer-checked:dark:bg-gray-900">
+            <span
+              className="px-2 py-0.5 rounded-xl dark:bg-teal-700/80 dark:text-slate-200 peer-checked:dark:bg-gray-900 text-xs"
+              onClick={switchToDeposit}
+            >
               deposit
             </span>
-            <span className="px-2 py-0.5 rounded-xl dark:bg-gray-900 peer-checked:dark:bg-teal-700/80 text-slate-200">
+            <span
+              className="px-2 py-0.5 rounded-xl dark:bg-gray-900 peer-checked:dark:bg-teal-700/80 text-slate-200 text-xs"
+              onClick={switchToDeposit}
+            >
               withdraw
             </span>
           </label>
@@ -94,35 +121,59 @@ const Wallet = () => {
             type="text"
             id="token0"
             placeholder="0.0000"
-            value={token1TransferAmount === 0 ? "" : token1TransferAmount}
-            className="bg-slate-900 w-full px-5 py-1.5 outline-none rounded-xl mt-2"
+            value={token1TransferAmount === "" ? "" : token1TransferAmount}
+            className="bg-slate-900 w-full px-5 py-1.5 outline-none rounded-xl mt-2 text-sm"
             onChange={(e) => amountHandler(e, tokens[0])}
           />
 
           <button
             className="button flex justify-center items-center w-full mt-4
-            hover:bg-teal-900 text-teal-700 hover:text-slate-300 py-1.5 rounded-xl border-2 border-teal-900"
+            hover:bg-teal-900 text-teal-700 hover:text-slate-300 py-1.5 rounded-xl border-2 border-teal-900 text-sm"
             type="submit"
           >
-            <span>Deposit</span>
+            {isDeposit ? <span>Deposit</span> : <span>Withdraw</span>}
           </button>
         </form>
       </div>
 
-      <div className="">
-        <div className=""></div>
+      <div>
+        <div className="pb-4 text-slate-200 flex justify-between">
+          <div>
+            <p className="text-xs text-slate-400">Token</p>
+            <div className="text-sm">{symbols && symbols[1]}</div>
+          </div>
+          <div>
+            <p className="text-xs text-slate-400">Wallet</p>
+            <div className="text-sm">
+              {tokenBalances && Number(tokenBalances[1]).toFixed(4)}
+            </div>
+          </div>
+          <div>
+            <p className="text-xs text-slate-400">Exchange</p>
+            <div className="text-sm">
+              {exchangeBalances && Number(exchangeBalances[1]).toFixed(4)}
+            </div>
+          </div>
+        </div>
 
-        <form>
-          <label htmlFor="token1"></label>
+        <form onSubmit={(e) => depositHandler(e, tokens[1])}>
+          <label htmlFor="token1" className="text-sm">
+            {symbols && symbols[1]} amount
+          </label>
           <input
             type="text"
             id="token1"
             placeholder="0.0000"
-            className="bg-slate-900 w-full px-5 py-1.5 outline-none rounded-xl"
+            onChange={(e) => amountHandler(e, tokens[1])}
+            value={token2TransferAmount === 0 ? "" : token2TransferAmount}
+            className="bg-slate-900 w-full px-5 py-1.5 outline-none rounded-xl mt-2 text-sm"
           />
-
-          <button className="button" type="submit">
-            <span></span>
+          <button
+            className="button flex justify-center items-center w-full mt-4
+            hover:bg-teal-900 text-teal-700 hover:text-slate-300 py-1.5 rounded-xl border-2 border-teal-900 text-sm"
+            type="submit"
+          >
+            {isDeposit ? <span>Deposit</span> : <span>Withdraw</span>}
           </button>
         </form>
       </div>
