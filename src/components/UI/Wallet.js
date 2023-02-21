@@ -60,6 +60,33 @@ const Wallet = () => {
     }
   };
 
+  const withdrawHandler = (e, token) => {
+    e.preventDefault();
+    if (token.address === tokens[0].address) {
+      transferTokens(
+        provider,
+        exchange,
+        "Withdraw",
+        token,
+        token2TransferAmount,
+        dispatch
+      );
+      setToken1TransferAmount("");
+    }
+    if (token.address === tokens[1].address) {
+      transferTokens(
+        provider,
+        exchange,
+        "Withdraw",
+        token,
+        token2TransferAmount,
+        dispatch
+      );
+      setToken2TransferAmount(0);
+    }
+    console.log("withdraw tokens");
+  };
+
   useEffect(() => {
     if (exchange && tokens[0] && tokens[1] && account) {
       loadBalances(exchange, tokens, account, dispatch);
@@ -113,7 +140,13 @@ const Wallet = () => {
           </div>
         </div>
 
-        <form onSubmit={(e) => depositHandler(e, tokens[0])}>
+        <form
+          onSubmit={
+            isDeposit
+              ? (e) => depositHandler(e, tokens[0])
+              : (e) => withdrawHandler(e, tokens[0])
+          }
+        >
           <label htmlFor="token0" className="text-sm">
             {symbols && symbols[0]} amount
           </label>
@@ -156,7 +189,13 @@ const Wallet = () => {
           </div>
         </div>
 
-        <form onSubmit={(e) => depositHandler(e, tokens[1])}>
+        <form
+          onSubmit={
+            isDeposit
+              ? (e) => depositHandler(e, tokens[1])
+              : (e) => withdrawHandler(e, tokens[1])
+          }
+        >
           <label htmlFor="token1" className="text-sm">
             {symbols && symbols[1]} amount
           </label>

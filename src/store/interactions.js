@@ -60,6 +60,9 @@ export const subscribeToEvents = (exchange, dispatch) => {
   exchange.on("Deposit", () => {
     dispatch({ type: "TRANSFER_SUCCESS" });
   });
+  exchange.on("Withdraw", () => {
+    dispatch({ type: "TRANSFER_SUCCESS" });
+  });
 };
 
 // ```solidity code function
@@ -105,13 +108,25 @@ export const transferTokens = async (
     const signer = await provider.getSigner();
     const amountToTransfer = ethers.utils.parseUnits(amount.toString(), 18);
 
-    transaction = await token
-      .connect(signer)
-      .approve(exchange.address, amountToTransfer);
-    await transaction.wait();
-    transaction = await exchange
-      .connect(signer)
-      .deposit(amountToTransfer, token.address);
+    if (transferType === "Deposit") {
+      transaction = await token
+        .connect(signer)
+        .approve(exchange.address, amountToTransfer);
+      await transaction.wait();
+      transaction = await exchange
+        .connect(signer)
+        .deposit(amountToTransfer, token.address);
+    }
+
+    if (transferType === "Withdraw") {
+      transaction = await token
+        .connect(signer)
+        .approve(exchange.address, amountToTransfer);
+      await transaction.wait();
+      transaction = await exchange
+        .connect(signer)
+        .withdraw(amountToTransfer, token.address);
+    }
 
     await transaction.wait();
   } catch (error) {
