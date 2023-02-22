@@ -120,7 +120,7 @@ const Wallet = () => {
         </div>
       </div>
 
-      <div className="pb-8">
+      <div className="pb-4">
         <div className="pb-4 text-slate-200 flex justify-between">
           <div>
             <p className="text-xs text-slate-400">Token</p>

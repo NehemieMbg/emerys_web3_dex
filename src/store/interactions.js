@@ -57,12 +57,28 @@ export const loadExchange = async (provider, address, dispatch) => {
 // To add when Deposit event is implemented
 ///////////////////////////////////////
 export const subscribeToEvents = (exchange, dispatch) => {
-  exchange.on("Deposit", () => {
+  exchange.on("Deposit", (token, user, amount, balance, event) => {
+    dispatch({ type: "TRANSFER_SUCCESS", event });
+  });
+  exchange.on("Withdraw", (token, user, amount, balance, event) => {
     dispatch({ type: "TRANSFER_SUCCESS" });
   });
-  exchange.on("Withdraw", () => {
-    dispatch({ type: "TRANSFER_SUCCESS" });
-  });
+  exchange.on(
+    "Orders",
+    (
+      id,
+      user,
+      tokenGet,
+      amountGet,
+      tokenGive,
+      amountGive,
+      timestamp,
+      event
+    ) => {
+      const order = event.args;
+      dispatch({ type: "NEW_ORDER_SUCCESS", order, event });
+    }
+  );
 };
 
 // ```solidity code function
@@ -130,6 +146,84 @@ export const transferTokens = async (
 
     await transaction.wait();
   } catch (error) {
+    console.error(error);
+  }
+};
+
+export const makeBuyOrder = async (
+  provider,
+  exchange,
+  tokens,
+  order,
+  dispatch
+) => {
+  // Position position,
+  // address tokenAddress,
+  // uint amount
+
+  const tokenGet = tokens[0].address;
+  const amountGet = ethers.utils.parseUnits(order.amount, 18);
+  // const tokenGive = tokens[1].address;
+  // const amountGive = ethers.utils.parseUnits(
+  //   (order.amount * order.price).toString(),
+  //   18
+  // );
+
+  try {
+    const signer = await provider.getSigner();
+
+    const transactionGet = await exchange
+      .connect(signer)
+      .createMarketOrder(0, tokenGet, amountGet);
+    await transactionGet.wait();
+
+    // const transactionGive = await exchange
+    //   .connect(signer)
+    //   .createMarketOrder(1, tokenGive, amountGive);
+    // await transactionGive.wait();
+
+    dispatch({ type: "NEW_ORDER_REQUEST" });
+  } catch (error) {
+    dispatch({ type: "NEW_ORDER_FAIL" });
+    console.error(error);
+  }
+};
+
+export const makeSellOrder = async (
+  provider,
+  exchange,
+  tokens,
+  order,
+  dispatch
+) => {
+  // Position position,
+  // address tokenAddress,
+  // uint amount
+
+  // const tokenGet = tokens[0].address;
+  // const amountGet = ethers.utils.parseUnits(order.amount, 18);
+  const tokenGive = tokens[1].address;
+  const amountGive = ethers.utils.parseUnits(
+    (order.amount * order.price).toString(),
+    18
+  );
+
+  try {
+    const signer = await provider.getSigner();
+
+    // const transactionGet = await exchange
+    //   .connect(signer)
+    //   .createMarketOrder(0, tokenGet, amountGet);
+    // await transactionGet.wait();
+
+    const transactionGive = await exchange
+      .connect(signer)
+      .createMarketOrder(1, tokenGive, amountGive);
+    await transactionGive.wait();
+
+    dispatch({ type: "NEW_ORDER_REQUEST" });
+  } catch (error) {
+    dispatch({ type: "NEW_ORDER_FAIL" });
     console.error(error);
   }
 };

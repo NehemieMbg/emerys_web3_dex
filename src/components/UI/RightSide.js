@@ -3,6 +3,7 @@ import Balance from "./Balance";
 import Markets from "./Markets";
 import BlockComponent from "./BlockComponent";
 import Wallet from "./Wallet";
+import Order from "./Order";
 
 const RightSide = () => {
   return (
@@ -14,6 +15,10 @@ const RightSide = () => {
 
       <BlockComponent>
         <Wallet />
+      </BlockComponent>
+
+      <BlockComponent>
+        <Order />
       </BlockComponent>
     </div>
   );
