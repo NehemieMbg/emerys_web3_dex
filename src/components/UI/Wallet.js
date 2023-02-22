@@ -68,12 +68,11 @@ const Wallet = () => {
         exchange,
         "Withdraw",
         token,
-        token2TransferAmount,
+        token1TransferAmount,
         dispatch
       );
-      setToken1TransferAmount("");
-    }
-    if (token.address === tokens[1].address) {
+      setToken1TransferAmount(0);
+    } else {
       transferTokens(
         provider,
         exchange,

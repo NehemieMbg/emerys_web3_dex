@@ -15,7 +15,7 @@ const Networks = () => {
   };
 
   return (
-    <div className="flex justify-between mb-6 gap-2 hover:text-teal-400 cursor-pointer items-center">
+    <div className="flex justify-between gap-2 hover:text-teal-400 cursor-pointer items-center">
       <img src={eth} alt="eth logo" className="h-6" />
 
       {chainId && (
@@ -30,7 +30,7 @@ const Networks = () => {
             Select Network
           </option>
           <option value="0x1">Localhost</option>
-          {/* <option value="0x5">Goerli</option> */}
+          <option value="0x5">Goerli</option>
         </select>
       )}
     </div>
