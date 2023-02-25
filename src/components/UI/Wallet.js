@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { loadBalances, transferTokens } from "../../store/interactions";
 
@@ -90,7 +90,7 @@ const Wallet = () => {
     if (exchange && tokens[0] && tokens[1] && account) {
       loadBalances(exchange, tokens, account, dispatch);
     }
-  }, [exchange, tokens, account, transferInProgress]);
+  }, [exchange, tokens, account, transferInProgress, dispatch]);
 
   return (
     <div>

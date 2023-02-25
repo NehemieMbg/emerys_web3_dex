@@ -1,5 +1,4 @@
 import React from "react";
-import MoonLogo from "../images/moon-logo.svg";
 import EmrsLogo from "../images/emerys-teal.svg";
 import Connect from "./UI/Connect";
 import Network from "./UI/Networks";
@@ -16,6 +15,7 @@ function Navbar() {
               <a
                 href="https://github.com/NehemieMbg/emerys_web3_dex"
                 target="_blank"
+                rel="noreferrer"
                 className="flex gap-1"
               >
                 Github
