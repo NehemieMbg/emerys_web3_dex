@@ -16,7 +16,7 @@ function Connect() {
 
   return (
     <div>
-      <div class="text-white font-medium text-sm cursor-pointer bg-slate-700 hover:bg-teal-700  rounded-md border-slate-400/20 border-[1px]">
+      <div class="text-white font-medium text-sm cursor-pointer bg-teal-700 hover:bg-teal-900  rounded-md border-slate-400/20 border-[1px]">
         {account ? (
           <div className="flex gap-4 items-center px-10 py-2.5">
             {account.slice(0, 5) + "..." + account.slice(38, 42)}

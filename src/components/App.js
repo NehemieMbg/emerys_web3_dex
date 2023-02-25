@@ -11,6 +11,7 @@ import {
   loadAccount,
   loadTokens,
   loadExchange,
+  loadAllOrders,
   subscribeToEvents,
 } from "../store/interactions";
 
@@ -53,6 +54,8 @@ function App() {
       exchangeConfig.address,
       dispatch
     );
+    // Fetch all orders: open, filled, cancelled
+    loadAllOrders(provider, exchange, dispatch);
 
     // Listen to events
     subscribeToEvents(exchange, dispatch);

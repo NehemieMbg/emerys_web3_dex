@@ -46,6 +46,7 @@ export const tokens = (state = DEFAULT_TOKENS_STATE, action) => {
         ...state,
         balances: [action.balance],
       };
+
     case "TOKEN_2_LOADED":
       return {
         ...state,
@@ -53,6 +54,7 @@ export const tokens = (state = DEFAULT_TOKENS_STATE, action) => {
         contracts: [...state.contracts, action.token],
         symbols: [...state.symbols, action.symbol],
       };
+
     case "TOKEN_2_BALANCE_LOADED":
       return {
         ...state,
@@ -67,7 +69,9 @@ export const tokens = (state = DEFAULT_TOKENS_STATE, action) => {
 const DEFAULT_EXCHANGE_STATE = {
   loaded: false,
   contract: {},
-  transaction: { isSuccessful: false },
+  transaction: {
+    isSuccessful: false,
+  },
   allOrders: {
     loaded: false,
     data: [],
@@ -76,6 +80,8 @@ const DEFAULT_EXCHANGE_STATE = {
 };
 
 export const exchange = (state = DEFAULT_EXCHANGE_STATE, action) => {
+  let index, data;
+
   switch (action.type) {
     case "EXCHANGE_LOADED":
       return {
@@ -83,6 +89,34 @@ export const exchange = (state = DEFAULT_EXCHANGE_STATE, action) => {
         loaded: true,
         contract: action.exchange,
       };
+
+    case "CANCELLED_ORDERS_LOADED":
+      return {
+        ...state,
+        cancelledOrders: {
+          loaded: true,
+          data: action.cancelledOrders,
+        },
+      };
+
+    case "FILLED_ORDERS_LOADED":
+      return {
+        ...state,
+        filledOrders: {
+          loaded: true,
+          data: action.filledOrders,
+        },
+      };
+
+    case "ALL_ORDERS_LOADED":
+      return {
+        ...state,
+        allOrders: {
+          loaded: true,
+          data: action.allOrders,
+        },
+      };
+
     case "EXCHANGE_TOKEN_1_BALANCE_LOADED":
       return {
         ...state,
@@ -93,10 +127,11 @@ export const exchange = (state = DEFAULT_EXCHANGE_STATE, action) => {
         ...state,
         balances: [...state.balances, action.balance],
       };
+
     case "TRANSFER_REQUEST":
       return {
         ...state,
-        transaction: {
+        trasnsaction: {
           transactionType: "Transfer",
           isPending: true,
           isSuccessful: false,
@@ -125,6 +160,7 @@ export const exchange = (state = DEFAULT_EXCHANGE_STATE, action) => {
         },
         transferInProgress: false,
       };
+
     case "NEW_ORDER_REQUEST":
       return {
         ...state,
@@ -134,15 +170,22 @@ export const exchange = (state = DEFAULT_EXCHANGE_STATE, action) => {
           isSuccessful: false,
         },
       };
+
     case "NEW_ORDER_SUCCESS":
+      if (index === -1) {
+        data = [...state.allOrders.data, action.order];
+      } else {
+        data = state.allOrders.data;
+      }
+
       return {
         ...state,
         allOrders: {
           ...state.allOrders,
-          data: [...state.allOrders.data, action.order],
+          data,
         },
         transaction: {
-          transactionType: "NEW Order",
+          transactionType: "New Order",
           isPending: false,
           isSuccessful: true,
         },

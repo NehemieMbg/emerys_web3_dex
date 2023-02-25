@@ -12,7 +12,7 @@ function Navbar() {
           <img src={EmrsLogo} className="h-10 mr-1 " alt="logo" />
           <h1 className="text-2xl mr-28 text-white font-semibold">emrs</h1>
           <div className="mt-1 flex gap-8 text-slate-300 font-medium">
-            <div className="hover:text-teal-400">
+            <div className="hover:text-teal-600">
               <a
                 href="https://github.com/NehemieMbg/emerys_web3_dex"
                 target="_blank"
@@ -35,7 +35,7 @@ function Navbar() {
                 </svg>
               </a>
             </div>
-            <div className="hover:text-teal-400 cursor-pointer">Us</div>
+            <div className="hover:text-teal-600 cursor-pointer">Us</div>
           </div>
         </div>
       </div>
